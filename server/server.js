@@ -1,15 +1,19 @@
 import express from "express";
 import * as dotenv from "dotenv";
 
-dotenv.config();
-const app = express();
+import router from "./routes/index.js";
+import { connectToMongoDB } from "./db/connectToMongoDB.js";
 
+const app = express();
 const PORT = process.env.PORT || 5000;
 
-app.get("/", (req, res) => {
-  res.send("hello world");
-});
+dotenv.config();
 
-app.listen(PORT, () =>
-  console.log(`The server is listening on the port ${PORT}`)
-);
+app.use(express.json())
+
+app.use(router);
+
+app.listen(PORT, () => {
+  connectToMongoDB(),
+    console.log(`The server is listening on the port ${PORT}`);
+});
