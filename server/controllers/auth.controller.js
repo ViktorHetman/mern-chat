@@ -50,8 +50,30 @@ const signupHandler = async (req, res) => {
   }
 };
 
-const signinHandler = (req, res) => {
-  res.send("SIGNIN ROUTE");
+const signinHandler = async (req, res) => {
+  try {
+    const { userName, password } = req.body;
+    const user = await User.findOne({ userName });
+    const isPasswordCorrect = await bcrypt.compare(
+      password,
+      user?.password || ""
+    );
+    if (!user || !isPasswordCorrect) {
+      return res.status(400).json({ error: "Invalid username or password" });
+    }
+
+    generateTokenAndSetCookies(user._id, res);
+
+    res.status(200).json({
+      _id: user._id,
+      fullName: user.fullName,
+      userName: user.userName,
+      profilePic: user.profilePic,
+    });
+  } catch (error) {
+    console.log("Error in login controller", error.message);
+    res.status(500).json({ error: "Internal server error" });
+  }
 };
 
 const logoutHandler = (req, res) => {
