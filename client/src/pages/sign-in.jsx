@@ -1,8 +1,19 @@
+import React from "react";
 import { Link } from "react-router-dom";
+import { useLogin } from "../hooks/useLogin";
 
 const SignIn = () => {
+  const [username, setUsername] = React.useState("");
+  const [password, setPassword] = React.useState("");
+  const { loading, login } = useLogin();
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    await login(username, password);
+  };
+
   return (
-    <div className="flex flex-col items-center justify-center min-w-96 mx-auto">
+    <section className="flex flex-col items-center justify-center min-w-96 mx-auto">
       <div
         className="w-full p-6 rounded-lg shadow-md bg-gray-400 bg-clip-padding backdrop-filter backdrop-blur-lg
       bg-opacity-0"
@@ -12,7 +23,7 @@ const SignIn = () => {
           <span className="text-blue-500"> MERN Chat App</span>
         </h1>
 
-        <form>
+        <form onSubmit={handleSubmit}>
           <div>
             <label className="label p-2">
               <span className="text-base label-text">Username:</span>
@@ -21,6 +32,8 @@ const SignIn = () => {
               type="text"
               placeholder="Enter username"
               className="w-full input input-bordered h-10"
+              value={username}
+              onChange={(e) => setUsername(e.target.value)}
             ></input>
           </div>
           <div>
@@ -31,6 +44,8 @@ const SignIn = () => {
               type="password"
               placeholder="******"
               className="w-full input input-bordered h-10"
+              value={password}
+              onChange={(e) => setPassword(e.target.value)}
             ></input>
           </div>
           <Link
@@ -40,11 +55,17 @@ const SignIn = () => {
             {"Don't"} have an account?
           </Link>
           <div>
-            <button className="btn btn-block btn-sm mt-2">Sign in</button>
+            <button className="btn btn-block btn-sm mt-2" disabled={loading}>
+              {loading ? (
+                <span className="loading loading-spinner" />
+              ) : (
+                <span>Sign In</span>
+              )}
+            </button>
           </div>
         </form>
       </div>
-    </div>
+    </section>
   );
 };
 
