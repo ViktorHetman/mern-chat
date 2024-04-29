@@ -2,14 +2,14 @@ import { useConversation } from "../../hooks/useConversation";
 
 const Conversation = ({ conversation, lastIdx }) => {
   const { selectedConversation, setSelectedConversation } = useConversation();
-  const isSelected = selectedConversation === conversation._id;
+  const isSelected = selectedConversation?._id === conversation._id;
 
   return (
     <>
       <div
         className={`flex gap-2 items-center hover:bg-sky-500 rounded py-1 p-2 cursor-pointer transition 
       duration-300 group active:bg-sky-800 ${isSelected ? "bg-sky-500" : ""}`}
-        onClick={() => setSelectedConversation(conversation._id)}
+        onClick={() => setSelectedConversation(conversation)}
       >
         <div className="avatar online">
           <div className="w-12 rounded-full">
